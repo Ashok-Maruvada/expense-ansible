@@ -18,7 +18,7 @@
       name: mysqld
       state: started
       enabled: yes
-
+  #these libraries are needed to make connection from ansible to mysql as ansible is developed in python
   - name: install python mysql dependencies
     ansible.builtin.pip:
       name:
