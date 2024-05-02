@@ -38,4 +38,9 @@
       src: /tmp/backend.zip
       dest: /app
       remote_src: yes # to tell machine, take the source file from remote machine as we downloaded in last step
+
+  - name: install npm
+    ansible.builtin.command: npm install
+    args:
+      chdir: /app
   
