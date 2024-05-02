@@ -1,0 +1,40 @@
+- name: configure db server
+  hosts: db
+  become: yes
+  vars:
+    login_host: "172.31.28.10"
+  vars_prompt:
+    - name: mysql_root_password
+      prompt: please enter mysql root password
+      private: false
+  tasks:
+  - name: install mysql server
+    ansible.builtin.dnf:
+      name: mysql-server
+      state: latest
+
+  - name: start and enable the mysql server
+    ansible.builtin.service:
+      name: mysqld
+      state: started
+      enabled: yes
+
+  - name: install python mysql dependencies
+    ansible.builtin.pip:
+      name:
+      - PyMySQL
+      - cryptography # in order to use password in command-line
+      executable: pip3.9 # pip3.11 if python version is 3.11
+
+
+  # check if password is already setup or not
+  - name: check db connection
+    community.mysql.mysql_info:
+      login_user: root
+      login_password: {{ mysql_root_password }}
+      login_host: {{ login_host }}
+      filter: version
+    ignore_errors: yes
+    register: mysql_connection_output
+
+  
